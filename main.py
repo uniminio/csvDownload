@@ -156,10 +156,6 @@ if __name__ == '__main__':
     option_merge = True
     data_dir = time.strftime('%Y%m%d_%H%M%S')
 
-    step1_complete = False
-    step2_complete = False
-    step3_complete = False
-
     all_project_name = os.listdir(remote_url)
 
     # 第1步，实例化object，建立窗口window
@@ -260,4 +256,4 @@ if __name__ == '__main__':
     b_download.config(state='disabled')
 
     # 第6步，主窗口循环显示
-    window.mainloop()
+    root.mainloop()
