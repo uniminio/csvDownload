@@ -52,8 +52,8 @@ def download_csv():
                     all_data_frame.append(data_frame)
             data_frame_concat = pd.concat(all_data_frame, axis=0, ignore_index=True)
             data_frame_concat.to_csv(os.path.join(data_dir, file_name + '.csv'))
-        messagebox.showinfo(message='下载完成')
-        os.system(f'explorer.exe {data_dir}')
+    messagebox.showinfo(message='下载完成')
+    os.system(f'explorer.exe {data_dir}')
 
 
 def search_project():
