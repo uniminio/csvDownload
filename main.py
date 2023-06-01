@@ -1,9 +1,12 @@
 from shutil import copyfile
+from typing import List
+
 import pandas as pd
 import os
 import time
 import tkinter as tk
 from tkinter import messagebox
+import threading
 
 
 def generate_file_path(file_name, channel_num):
@@ -38,22 +41,42 @@ def download_csv():
     if not os.path.exists(data_dir):
         os.mkdir(data_dir)
     channel_num = int(channel_num_var.get())
+    file_path_list_list: List[List[str]] = []
+    count = 0
     for file_name in file_name_list:
-        file_path_list = generate_file_path(file_name, channel_num)
+        file_path_list: List[str] = generate_file_path(file_name, channel_num)
+        count += len(file_path_list)
+        file_path_list_list.append(file_path_list)
+
+    current_count = 0
+    i = 0
+    for file_path_list in file_path_list_list:
         if not option_merge:
             for file_path in file_path_list:
+                current_count += 1
+                str_progress.set(f'{current_count}/{count}')
                 if os.path.exists(file_path):
                     copyfile(file_path, translate_path(file_path))
         elif option_merge:
             all_data_frame = []
             for file_path in file_path_list:
+                current_count += 1
+                str_progress.set(f'{current_count}/{count}')
                 if os.path.exists(file_path):
                     data_frame = pd.read_csv(file_path)
                     all_data_frame.append(data_frame)
             data_frame_concat = pd.concat(all_data_frame, axis=0, ignore_index=True)
-            data_frame_concat.to_csv(os.path.join(data_dir, file_name + '.csv'))
+            data_frame_concat.to_csv(os.path.join(data_dir, file_name_list[i] + '.csv'))
+        i += 1
     messagebox.showinfo(message='下载完成')
+    b_download.config(state='active')
     os.system(f'explorer.exe {data_dir}')
+
+
+def async_download_csv():
+    b_download.config(state='disabled')
+    th = threading.Thread(target=download_csv)
+    th.start()
 
 
 def search_project():
@@ -251,9 +274,14 @@ if __name__ == '__main__':
     e_channel_num = tk.Entry(channel_num_frame, textvariable=channel_num_var)
     e_channel_num.pack(side='left')
 
-    b_download = tk.Button(window, text="下载", command=download_csv)
+    b_download = tk.Button(window, text="下载", command=async_download_csv)
     b_download.pack()
     b_download.config(state='disabled')
+
+    str_progress = tk.StringVar()
+    str_progress.set('0/0')
+    l_progress = tk.Label(window, textvariable=str_progress)
+    l_progress.pack()
 
     # 第6步，主窗口循环显示
     root.mainloop()
