@@ -80,6 +80,7 @@ def download_csv():
                     except Exception:
                         with open(data_dir + "\\error.txt", "a") as f:
                             f.write(file_path + "\n")
+                        i += 1
                         continue
                     else:
                         all_data_frame.append(data_frame)
