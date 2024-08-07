@@ -46,6 +46,7 @@ def translate_path(src_path):
 
 
 def download_csv():
+    lb_filename_on_focus_out()
     if len(file_name_list) == 0:
         b_download.config(state="active")
         return
@@ -199,7 +200,9 @@ def on_vertical(event=None):
         c.yview_moveto(round(s.get()[0] + 0.1, 1))
 
 
-def lb_filename_on_focus_out(event):
+def lb_filename_on_focus_out(event = None):
+    if len(lb_filename_list.curselection()) == 0:
+        return
     file_name_list.clear()
     for i in lb_filename_list.curselection():
         file_name_list.append(lb_filename_list.get(i))
@@ -225,7 +228,7 @@ if __name__ == "__main__":
     s.pack(side="right", fill="y")
 
     # 第2步，给窗口的可视化起名字
-    root.title("CSV Download v2.0")
+    root.title("CSV Download v2.1")
 
     root.geometry("800x960")
 
