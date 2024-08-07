@@ -75,8 +75,14 @@ def download_csv():
                 current_count += 1
                 str_progress.set(f"{current_count}/{count}")
                 if os.path.exists(file_path):
-                    data_frame = pd.read_csv(file_path)
-                    all_data_frame.append(data_frame)
+                    try:
+                        data_frame = pd.read_csv(file_path)
+                    except Exception:
+                        with open(data_dir + "\\error.txt", "a") as f:
+                            f.write(file_path + "\n")
+                        continue
+                    else:
+                        all_data_frame.append(data_frame)
             data_frame_concat = pd.concat(all_data_frame, axis=0, ignore_index=True)
             data_frame_concat.to_csv(os.path.join(data_dir, file_name_list[i] + ".csv"))
         i += 1
@@ -200,7 +206,7 @@ def on_vertical(event=None):
         c.yview_moveto(round(s.get()[0] + 0.1, 1))
 
 
-def lb_filename_on_focus_out(event = None):
+def lb_filename_on_focus_out(event=None):
     if len(lb_filename_list.curselection()) == 0:
         return
     file_name_list.clear()
@@ -228,7 +234,7 @@ if __name__ == "__main__":
     s.pack(side="right", fill="y")
 
     # 第2步，给窗口的可视化起名字
-    root.title("CSV Download v2.1")
+    root.title("CSV Download v2.2.0")
 
     root.geometry("800x960")
 
