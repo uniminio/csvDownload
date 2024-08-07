@@ -145,7 +145,7 @@ def step2():
 
 
 def split_name(fullname):
-    return fullname.split(".")[0].split("_E_")[-1]
+    return fullname.split(".csv")[0].split("_E_")[-1]
 
 
 def get_max_channel_num(file_list):
@@ -235,7 +235,7 @@ if __name__ == "__main__":
     s.pack(side="right", fill="y")
 
     # 第2步，给窗口的可视化起名字
-    root.title("CSV Download v2.2.0")
+    root.title("CSV Download v2.2.1")
 
     root.geometry("800x960")
 
